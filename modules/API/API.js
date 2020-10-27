@@ -15,12 +15,19 @@ import {
 } from '../../react/features/base/conference';
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
+import { pinParticipant } from '../../react/features/base/participants';
 import {
     processExternalDeviceRequest
 } from '../../react/features/device-selection/functions';
 import { isEnabled as isDropboxEnabled } from '../../react/features/dropbox';
-import { setE2EEKey } from '../../react/features/e2ee';
+import { toggleE2EE } from '../../react/features/e2ee/actions';
 import { invite } from '../../react/features/invite';
+import {
+    captureLargeVideoScreenshot,
+    resizeLargeVideo,
+    selectParticipantInLargeVideo
+} from '../../react/features/large-video/actions';
+import { toggleLobbyMode } from '../../react/features/lobby/actions.web';
 import { RECORDING_TYPES } from '../../react/features/recording/constants';
 import { getActiveSession } from '../../react/features/recording/functions';
 import { muteAllParticipants } from '../../react/features/remote-video-menu/actions';
@@ -89,6 +96,9 @@ function initCommands() {
 
             APP.store.dispatch(muteAllParticipants(localIds));
         },
+        'toggle-lobby': isLobbyEnabled => {
+            APP.store.dispatch(toggleLobbyMode(isLobbyEnabled));
+        },
         'password': password => {
             const { conference, passwordRequired }
                 = APP.store.getState()['features/base/conference'];
@@ -111,13 +121,28 @@ function initCommands() {
                 ));
             }
         },
+        'pin-participant': id => {
+            logger.debug('Pin participant command received');
+            sendAnalytics(createApiEvent('participant.pinned'));
+            APP.store.dispatch(pinParticipant(id));
+        },
         'proxy-connection-event': event => {
             APP.conference.onProxyConnectionEvent(event);
+        },
+        'resize-large-video': (width, height) => {
+            logger.debug('Resize large video command received');
+            sendAnalytics(createApiEvent('largevideo.resized'));
+            APP.store.dispatch(resizeLargeVideo(width, height));
         },
         'send-tones': (options = {}) => {
             const { duration, tones, pause } = options;
 
             APP.store.dispatch(sendTones(tones, duration, pause));
+        },
+        'set-large-video-participant': participantId => {
+            logger.debug('Set large video participant command received');
+            sendAnalytics(createApiEvent('largevideo.participant.set'));
+            APP.store.dispatch(selectParticipantInLargeVideo(participantId));
         },
         'subject': subject => {
             sendAnalytics(createApiEvent('subject.changed'));
@@ -187,9 +212,9 @@ function initCommands() {
                 logger.error('Failed sending endpoint text message', err);
             }
         },
-        'e2ee-key': key => {
-            logger.debug('Set E2EE key command received');
-            APP.store.dispatch(setE2EEKey(key));
+        'toggle-e2ee': enabled => {
+            logger.debug('Toggle E2EE key command received');
+            APP.store.dispatch(toggleE2EE(enabled));
         },
         'set-video-quality': frameHeight => {
             logger.debug('Set video quality command received');
@@ -198,7 +223,8 @@ function initCommands() {
         },
 
         /**
-         * Starts a file recording or streaming depending on the passed on params.
+         * Starts a file recording or streaming session depending on the passed on params.
+         * For RTMP streams, `rtmpStreamKey` must be passed on. `rtmpBroadcastID` is optional.
          * For youtube streams, `youtubeStreamKey` must be passed on. `youtubeBroadcastID` is optional.
          * For dropbox recording, recording `mode` should be `file` and a dropbox oauth2 token must be provided.
          * For file recording, recording `mode` should be `file` and optionally `shouldShare` could be passed on.
@@ -206,13 +232,23 @@ function initCommands() {
          *
          * @param { string } arg.mode - Recording mode, either `file` or `stream`.
          * @param { string } arg.dropboxToken - Dropbox oauth2 token.
+         * @param { string } arg.rtmpStreamKey - The RTMP stream key.
+         * @param { string } arg.rtmpBroadcastID - The RTMP braodcast ID.
          * @param { boolean } arg.shouldShare - Whether the recording should be shared with the participants or not.
          * Only applies to certain jitsi meet deploys.
          * @param { string } arg.youtubeStreamKey - The youtube stream key.
          * @param { string } arg.youtubeBroadcastID - The youtube broacast ID.
          * @returns {void}
          */
-        'start-recording': ({ mode, dropboxToken, shouldShare, youtubeStreamKey, youtubeBroadcastID }) => {
+        'start-recording': ({
+            mode,
+            dropboxToken,
+            shouldShare,
+            rtmpStreamKey,
+            rtmpBroadcastID,
+            youtubeStreamKey,
+            youtubeBroadcastID
+        }) => {
             const state = APP.store.getState();
             const conference = getCurrentConference(state);
 
@@ -228,8 +264,8 @@ function initCommands() {
                 return;
             }
 
-            if (mode === JitsiRecordingConstants.mode.STREAM && !youtubeStreamKey) {
-                logger.error('Failed starting recording: missing youtube stream key');
+            if (mode === JitsiRecordingConstants.mode.STREAM && !(youtubeStreamKey || rtmpStreamKey)) {
+                logger.error('Failed starting recording: missing youtube or RTMP stream key');
 
                 return;
             }
@@ -261,9 +297,9 @@ function initCommands() {
                 }
             } else if (mode === JitsiRecordingConstants.mode.STREAM) {
                 recordingConfig = {
-                    broadcastId: youtubeBroadcastID,
+                    broadcastId: youtubeBroadcastID || rtmpBroadcastID,
                     mode: JitsiRecordingConstants.mode.STREAM,
-                    streamId: youtubeStreamKey
+                    streamId: youtubeStreamKey || rtmpStreamKey
                 };
             } else {
                 logger.error('Invalid recording mode provided');
@@ -324,6 +360,21 @@ function initCommands() {
         const { name } = request;
 
         switch (name) {
+        case 'capture-largevideo-screenshot' :
+            APP.store.dispatch(captureLargeVideoScreenshot())
+                .then(dataURL => {
+                    let error;
+
+                    if (!dataURL) {
+                        error = new Error('No large video found!');
+                    }
+
+                    callback({
+                        error,
+                        dataURL
+                    });
+                });
+            break;
         case 'invite': {
             const { invitees } = request;
 
@@ -521,6 +572,19 @@ class API {
     }
 
     /**
+     * Notify external application that the video quality setting has changed.
+     *
+     * @param {number} videoQuality - The video quality. The number represents the maximum height of the video streams.
+     * @returns {void}
+     */
+    notifyVideoQualityChanged(videoQuality: number) {
+        this._sendEvent({
+            name: 'video-quality-changed',
+            videoQuality
+        });
+    }
+
+    /**
      * Notify external application (if API is enabled) that message was
      * received.
      *
@@ -674,6 +738,21 @@ class API {
     }
 
     /**
+     * Notify external application (if API is enabled) that the an error has been logged.
+     *
+     * @param {string} logLevel - The message log level.
+     * @param {Array} args - Array of strings composing the log message.
+     * @returns {void}
+     */
+    notifyLog(logLevel: string, args: Array<string>) {
+        this._sendEvent({
+            name: 'log',
+            logLevel,
+            args
+        });
+    }
+
+    /**
      * Notify external application (if API is enabled) that the conference has
      * been joined.
      *
@@ -693,8 +772,7 @@ class API {
     }
 
     /**
-     * Notify external application (if API is enabled) that user changed their
-     * nickname.
+     * Notify external application (if API is enabled) that local user has left the conference.
      *
      * @param {string} roomName - User id.
      * @returns {void}
@@ -956,6 +1034,19 @@ class API {
         this._sendEvent({
             name: 'tile-view-changed',
             enabled
+        });
+    }
+
+    /**
+     * Notify external application (if API is enabled) that the localStorage has changed.
+     *
+     * @param {string} localStorageContent - The new localStorageContent.
+     * @returns {void}
+     */
+    notifyLocalStorageChanged(localStorageContent: string) {
+        this._sendEvent({
+            name: 'local-storage-changed',
+            localStorageContent
         });
     }
 

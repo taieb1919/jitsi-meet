@@ -2,12 +2,15 @@
 
 import React, { Component } from 'react';
 
+import { MEDIA_TYPE } from '../../../base/media';
 import { getLocalParticipant, getParticipantById, PARTICIPANT_ROLE } from '../../../base/participants';
 import { connect } from '../../../base/redux';
+import { isLocalTrackMuted, isRemoteTrackMuted } from '../../../base/tracks';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
 
 import AudioMutedIndicator from './AudioMutedIndicator';
 import ModeratorIndicator from './ModeratorIndicator';
+import ScreenShareIndicator from './ScreenShareIndicator';
 import VideoMutedIndicator from './VideoMutedIndicator';
 
 declare var interfaceConfig: Object;
@@ -28,14 +31,19 @@ type Props = {
     _showModeratorIndicator: Boolean,
 
     /**
+     * Indicates if the video muted indicator should be visible or not.
+     */
+    _showVideoMutedIndicator: Boolean,
+
+    /**
      * Indicates if the audio muted indicator should be visible or not.
      */
     showAudioMutedIndicator: Boolean,
 
     /**
-     * Indicates if the video muted indicator should be visible or not.
+     * Indicates if the screen share indicator should be visible or not.
      */
-    showVideoMutedIndicator: Boolean,
+    showScreenShareIndicator: Boolean,
 
     /**
      * The ID of the participant for which the status bar is rendered.
@@ -60,7 +68,8 @@ class StatusIndicators extends Component<Props> {
             _currentLayout,
             _showModeratorIndicator,
             showAudioMutedIndicator,
-            showVideoMutedIndicator
+            showScreenShareIndicator,
+            _showVideoMutedIndicator
         } = this.props;
         let tooltipPosition;
 
@@ -78,7 +87,8 @@ class StatusIndicators extends Component<Props> {
         return (
             <div>
                 { showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
-                { showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
+                { showScreenShareIndicator ? <ScreenShareIndicator tooltipPosition = { tooltipPosition } /> : null }
+                { _showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
                 { _showModeratorIndicator ? <ModeratorIndicator tooltipPosition = { tooltipPosition } /> : null }
             </div>
         );
@@ -93,7 +103,8 @@ class StatusIndicators extends Component<Props> {
  * @private
  * @returns {{
  *     _currentLayout: string,
- *     _showModeratorIndicator: boolean
+ *     _showModeratorIndicator: boolean,
+ *     _showVideoMutedIndicator: boolean
  * }}
 */
 function _mapStateToProps(state, ownProps) {
@@ -102,10 +113,20 @@ function _mapStateToProps(state, ownProps) {
     // Only the local participant won't have id for the time when the conference is not yet joined.
     const participant = participantID ? getParticipantById(state, participantID) : getLocalParticipant(state);
 
+    const tracks = state['features/base/tracks'];
+    let isVideoMuted = true;
+
+    if (participant?.local) {
+        isVideoMuted = isLocalTrackMuted(tracks, MEDIA_TYPE.VIDEO);
+    } else if (!participant?.isFakeParticipant) { // remote participants excluding shared video
+        isVideoMuted = isRemoteTrackMuted(tracks, MEDIA_TYPE.VIDEO, participantID);
+    }
+
     return {
         _currentLayout: getCurrentLayout(state),
         _showModeratorIndicator:
-            !interfaceConfig.DISABLE_FOCUS_INDICATOR && participant && participant.role === PARTICIPANT_ROLE.MODERATOR
+            !interfaceConfig.DISABLE_FOCUS_INDICATOR && participant && participant.role === PARTICIPANT_ROLE.MODERATOR,
+        _showVideoMutedIndicator: isVideoMuted
     };
 }
 

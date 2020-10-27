@@ -15,9 +15,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
+
 	<string>20.3.6</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.softic.wmeet.watchkit</string>
+
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>UISupportedInterfaceOrientations</key>

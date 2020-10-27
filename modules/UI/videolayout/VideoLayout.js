@@ -52,7 +52,7 @@ function onLocalFlipXChanged(val) {
  */
 function getAllThumbnails() {
     return [
-        localVideoThumbnail,
+        ...localVideoThumbnail ? [ localVideoThumbnail ] : [],
         ...Object.values(remoteVideos)
     ];
 }
@@ -176,7 +176,8 @@ const VideoLayout = {
         if (stream.getType() === 'audio') {
             this.onAudioMute(id, stream.isMuted());
         } else {
-            this.onVideoMute(id, stream.isMuted());
+            this.onVideoMute(id);
+            remoteVideo.setScreenSharing(stream.videoType === 'desktop');
         }
     },
 
@@ -188,6 +189,7 @@ const VideoLayout = {
 
         if (remoteVideo) {
             remoteVideo.removeRemoteStreamElement(stream);
+            remoteVideo.setScreenSharing(false);
         }
 
         this.updateMutedForNoTracks(id, stream.getType());
@@ -208,7 +210,7 @@ const VideoLayout = {
             if (mediaType === 'audio') {
                 APP.UI.setAudioMuted(participantId, true);
             } else if (mediaType === 'video') {
-                APP.UI.setVideoMuted(participantId, true);
+                APP.UI.setVideoMuted(participantId);
             } else {
                 logger.error(`Unsupported media type: ${mediaType}`);
             }
@@ -348,14 +350,14 @@ const VideoLayout = {
     /**
      * On video muted event.
      */
-    onVideoMute(id, value) {
+    onVideoMute(id) {
         if (APP.conference.isLocalId(id)) {
-            localVideoThumbnail && localVideoThumbnail.setVideoMutedView(value);
+            localVideoThumbnail && localVideoThumbnail.updateView();
         } else {
             const remoteVideo = remoteVideos[id];
 
             if (remoteVideo) {
-                remoteVideo.setVideoMutedView(value);
+                remoteVideo.onVideoMute();
             }
         }
 
@@ -485,13 +487,14 @@ const VideoLayout = {
     },
 
     onVideoTypeChanged(id, newVideoType) {
-        if (VideoLayout.getRemoteVideoType(id) === newVideoType) {
+        const remoteVideo = remoteVideos[id];
+
+        if (!remoteVideo) {
             return;
         }
 
         logger.info('Peer video type changed: ', id, newVideoType);
-
-        this._updateLargeVideoIfDisplayed(id, true);
+        remoteVideo.setScreenSharing(newVideoType === 'desktop');
     },
 
     /**

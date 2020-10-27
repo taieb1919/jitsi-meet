@@ -159,7 +159,11 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                         <TextInput
                             autoCorrect = { false }
                             onChangeText = { this._onChangeDisplayName }
+
                             placeholder = 'Salah Ali'
+
+                            textContentType = { 'name' } // iOS only
+
                             value = { displayName } />
                     </FormRow>
                     <FormRow
@@ -170,7 +174,11 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             autoCorrect = { false }
                             keyboardType = { 'email-address' }
                             onChangeText = { this._onChangeEmail }
+
                             placeholder = 'salah.ali@example.com'
+
+                            textContentType = { 'emailAddress' } // iOS only
+
                             value = { email } />
                     </FormRow>
                     <FormSectionHeader
@@ -183,9 +191,11 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             autoCapitalize = 'none'
                             autoCorrect = { false }
                             editable = { this.props._serverURLChangeEnabled }
+                            keyboardType = { 'url' }
                             onBlur = { this._onBlurServerURL }
                             onChangeText = { this._onChangeServerURL }
                             placeholder = { this.props._serverURL }
+                            textContentType = { 'URL' } // iOS only
                             value = { serverURL } />
                     </FormRow>
                     <FormRow
@@ -205,12 +215,14 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                     <FormRow
                         label = 'settingsView.version'>
                         <Text>
-                            { 1.3 }
+
+                            { 1.7 }
+
                         </Text>
                     </FormRow>
                     <FormSectionHeader
                         label = 'settingsView.advanced' />
-                    { this._renderAdvancedSettings() }
+                    {this._renderAdvancedSettings()}
                 </ScrollView>
             </JitsiModal>
         );

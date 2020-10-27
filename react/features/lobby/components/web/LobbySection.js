@@ -59,18 +59,19 @@ class LobbySection extends PureComponent<Props, State> {
     }
 
     /**
-     * Implements {@code PureComponent#componentDidUpdate}.
+     * Implements React's {@link Component#getDerivedStateFromProps()}.
      *
      * @inheritdoc
      */
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props._lobbyEnabled !== prevProps._lobbyEnabled
-                && this.state.lobbyEnabled !== prevState.lobbyEnabled) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({
-                lobbyEnabled: this.props._lobbyEnabled
-            });
+    static getDerivedStateFromProps(props: Props, state: Object) {
+        if (props._lobbyEnabled !== state.lobbyEnabled) {
+
+            return {
+                lobbyEnabled: props._lobbyEnabled
+            };
         }
+
+        return null;
     }
 
     /**
@@ -131,10 +132,12 @@ class LobbySection extends PureComponent<Props, State> {
  */
 function mapStateToProps(state: Object): $Shape<Props> {
     const { conference } = state['features/base/conference'];
+    const { hideLobbyButton } = state['features/base/config'];
 
     return {
         _lobbyEnabled: state['features/lobby'].lobbyEnabled,
         _visible: conference && conference.isLobbySupported() && isLocalParticipantModerator(state)
+            && !hideLobbyButton
     };
 }
 
