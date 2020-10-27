@@ -19,6 +19,7 @@
 #import "FIRUtilities.h"
 #import "Types.h"
 #import "ViewController.h"
+#import "CommonClass.h"
 
 @import Crashlytics;
 @import Fabric;
@@ -27,18 +28,30 @@
 
 @implementation AppDelegate
 
+
+
+
 -             (BOOL)application:(UIApplication *)application
   didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     JitsiMeet *jitsiMeet = [JitsiMeet sharedInstance];
 
     jitsiMeet.conferenceActivityType = JitsiMeetConferenceActivityType;
-    jitsiMeet.customUrlScheme = @"org.jitsi.meet";
-    jitsiMeet.universalLinkDomains = @[@"meet.jit.si", @"alpha.jitsi.net", @"beta.meet.jit.si"];
+    jitsiMeet.customUrlScheme = @"com.softic.wmeet";
+    jitsiMeet.universalLinkDomains = @[@"meet.jit.si", @"alpha.jitsi.net", @"beta.meet.jit.si" , @"com.softic.wmeet" ];
 
     jitsiMeet.defaultConferenceOptions = [JitsiMeetConferenceOptions fromBuilder:^(JitsiMeetConferenceOptionsBuilder *builder) {
         [builder setFeatureFlag:@"resolution" withValue:@(360)];
-        builder.serverURL = [NSURL URLWithString:@"https://meet.jit.si"];
+      [builder setFeatureFlag:@"add-people.enabled" withBoolean:NO];
+       [builder setFeatureFlag:@"invite.enabled" withBoolean:NO];
+       [builder setFeatureFlag:@"live-streaming.enabled" withBoolean:NO];
+      
+      
+      [builder setFeatureFlag:@"close-captions.enabled" withBoolean:NO];
+      [builder setFeatureFlag:@"meeting-password.enabled" withBoolean:NO];
+      
+        builder.serverURL = [NSURL URLWithString:@"https://devmeet.softic.us"];
         builder.welcomePageEnabled = YES;
+      
 
         // Apple rejected our app because they claim requiring a
         // Dropbox account for recording is not acceptable.
@@ -65,6 +78,24 @@
     ViewController *rootController = (ViewController *)self.window.rootViewController;
     [rootController terminate];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #pragma mark Linking delegate methods
 
@@ -100,6 +131,10 @@
                                 restorationHandler:restorationHandler];
 }
 
+
+
+
+
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
@@ -111,7 +146,17 @@
     }
 
     NSURL *openUrl = url;
-
+  
+  
+  NSLog(@"url recieved: %@", url);
+     NSLog(@"query string: %@", [url query]);
+     NSLog(@"host: %@", [url host]);
+     NSLog(@"url path: %@", [url path]);
+     NSDictionary *dict = [self parseQueryString:[url query]];
+     
+  [CommonClass sharedObject].UniqueToken= [dict objectForKey:@"jwt"];
+//  UniqueToken = [dict objectForKey:@"jwt"];
+  //NSLog(@"UniqueToken: %@", UniqueToken);
     if ([FIRUtilities appContainsRealServiceInfoPlist]) {
         // Process Firebase Dynamic Links
         FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
@@ -120,10 +165,29 @@
             openUrl = firebaseUrl;
         }
     }
-
+//					  [self showAlert:@"hhhhhh"];
+  
     return [[JitsiMeet sharedInstance] application:app
                                            openURL:openUrl
                                            options:options];
 }
+
+
+
+
+- (NSDictionary *)parseQueryString:(NSString *)query {
+    NSMutableDictionary *dict = [[[NSMutableDictionary alloc] initWithCapacity:6] autorelease];
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    
+    for (NSString *pair in pairs) {
+        NSArray *elements = [pair componentsSeparatedByString:@"="];
+      NSString *key = [[elements objectAtIndex:0] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+      NSString *val = [[elements objectAtIndex:1] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        
+        [dict setObject:val forKey:key];
+    }
+    return dict;
+}
+
 
 @end

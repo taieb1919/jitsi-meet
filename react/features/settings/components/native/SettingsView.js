@@ -159,7 +159,7 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                         <TextInput
                             autoCorrect = { false }
                             onChangeText = { this._onChangeDisplayName }
-                            placeholder = 'John Doe'
+                            placeholder = 'Salah Ali'
                             value = { displayName } />
                     </FormRow>
                     <FormRow
@@ -170,7 +170,7 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             autoCorrect = { false }
                             keyboardType = { 'email-address' }
                             onChangeText = { this._onChangeEmail }
-                            placeholder = 'email@example.com'
+                            placeholder = 'salah.ali@example.com'
                             value = { email } />
                     </FormRow>
                     <FormSectionHeader
@@ -205,7 +205,7 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                     <FormRow
                         label = 'settingsView.version'>
                         <Text>
-                            { `${AppInfo.version} build ${AppInfo.buildNumber}` }
+                            { 1.3 }
                         </Text>
                     </FormRow>
                     <FormSectionHeader

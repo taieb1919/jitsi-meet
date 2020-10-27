@@ -25,6 +25,8 @@
 
 #import "Types.h"
 #import "ViewController.h"
+#import "AppDelegate.h"
+#import "CommonClass.h"
 
 
 @implementation ViewController
@@ -85,11 +87,25 @@
       [userActivity becomeCurrent];
     }
 #endif
+  
+  [self sendRequestFromURL:false completion:^(NSData *data, NSURLResponse *response, NSError *error)
+   {
+   [self showAlert: [[NSString alloc] initWithData: data
+                                          encoding: NSUTF8StringEncoding]];
+     //self.responseText
+  }];
+  
 
 }
 
 - (void)conferenceTerminated:(NSDictionary *)data {
     [self _onJitsiMeetViewDelegateEvent:@"CONFERENCE_TERMINATED" withData:data];
+  [self sendRequestFromURL: true completion:^(NSData *data, NSURLResponse *response, NSError *error)
+   {
+   [self showAlert: [[NSString alloc] initWithData: data
+                                          encoding: NSUTF8StringEncoding]];
+     //self.responseText
+  }];
 }
 
 - (void)conferenceWillJoin:(NSDictionary *)data {
@@ -105,8 +121,105 @@
 #pragma mark - Helpers
 
 - (void)terminate {
+  
+  [self sendRequestFromURL: true completion:^(NSData *data, NSURLResponse *response, NSError *error)
+   {
+   [self showAlert: [[NSString alloc] initWithData: data
+                                          encoding: NSUTF8StringEncoding]];
+     //self.responseText
+  }];
     JitsiMeetView *view = (JitsiMeetView *) self.view;
     [view leave];
 }
+
+
+
+
+- (void) showAlert:(NSString *)msg
+{
+  
+  //ViewController *rootController = (ViewController *)self.window.rootViewController;
+ 
+  
+  NSLog(@"Alerrrrrrrrrrrrrrrrrrrt :   %@", msg);
+  
+  
+  /*
+  UIAlertController *alert = [UIAlertController
+                               alertControllerWithTitle:@"test message"
+                              message:msg
+                              preferredStyle:UIAlertControllerStyleAlert
+                        ];
+  
+  UIAlertAction* noButton = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 [alert dismissViewControllerAnimated:YES completion:nil];
+                             }];
+  [alert addAction:noButton];
+  [self presentViewController:alert animated:YES completion:nil];
+  */
+  
+  
+  
+  
+  
+  //[self presentViewController:alertvc animated:YES completion:nil];
+}
+
+NSString *responseText=@"rrrr";
+
+  
+
+
+
+- (void)sendRequestFromURL
+                          :(BOOL ) isLeft
+      completion:  (void (^)(NSData *data, NSURLResponse *response, NSError *error)) completion
+  {
+    NSString * url= @"http://192.168.120.5:45455/Testing";
+    
+    // Get the shared instance
+   // AppDelegate *appdelegate = [AppDelegate sharedInstance];
+   
+    
+    
+    //NSString *token=  [appdelegate getUniqueToken];
+    NSString *token= [CommonClass sharedObject].UniqueToken;
+    [self showAlert:token];
+    NSString *isLeftString = isLeft ? @"true" : @"false";
+    url=[NSString stringWithFormat:@"https://cnn.eppm.com.tn/SofticwMeet/API/WmeetApi/LogParticipantWithToken?token=%@&left=%@",token, isLeftString];
+
+    
+    NSURL *myURL = [NSURL URLWithString: url];
+    NSMutableURLRequest  *request = [[NSMutableURLRequest  alloc] initWithURL: myURL];
+      NSURLSession *session = [NSURLSession sharedSession];
+
+    [request setValue:@"true" forHTTPHeaderField:@"IsWmeetMobile"];
+    
+    
+      NSURLSessionDataTask *task = [session dataTaskWithRequest: request
+        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+        {
+        responseText = [[NSString alloc] initWithData: data
+            encoding: NSUTF8StringEncoding];
+          if (completion != nil)
+          {
+             //The data task's completion block runs on a background thread
+             //by default, so invoke the completion handler on the main thread
+             //for safety
+            //dispatch_async(dispatch_get_main_queue(), completion(data,response,error));
+            completion(data,response,error);
+          }
+        }];
+        [task resume];
+  
+
+}
+
+
+
 
 @end

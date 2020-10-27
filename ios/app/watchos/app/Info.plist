@@ -8,8 +8,6 @@
 	<string>Jitsi Meet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -17,7 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>20.3.0</string>
+	<string>20.3.6</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.softic.wmeet.watchkit</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>UISupportedInterfaceOrientations</key>
@@ -26,7 +26,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>org.jitsi.meet</string>
+	<string>com.softic.wmeet</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 </dict>
