@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId 'org.jitsi.meet'
+        applicationId 'com.softic.wmeet'
         versionCode vcode
         versionName project.appVersion
 
@@ -77,7 +77,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-
+implementation 'com.amitshekhar.android:android-networking:1.0.2'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 
     if (!rootProject.ext.libreBuild) {

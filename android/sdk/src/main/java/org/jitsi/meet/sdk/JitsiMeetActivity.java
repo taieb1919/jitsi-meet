@@ -16,8 +16,10 @@
 
 package org.jitsi.meet.sdk;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -40,6 +42,7 @@ import java.util.HashMap;
 public class JitsiMeetActivity extends FragmentActivity
     implements JitsiMeetActivityInterface {
 
+
     protected static final String TAG = JitsiMeetActivity.class.getSimpleName();
 
     private static final String ACTION_JITSI_MEET_CONFERENCE = "org.jitsi.meet.CONFERENCE";
@@ -53,7 +56,7 @@ public class JitsiMeetActivity extends FragmentActivity
     };
     // Helpers for starting the activity
     //
-
+    protected String TokenJwt=null;
     public static void launch(Context context, JitsiMeetConferenceOptions options) {
         Intent intent = new Intent(context, JitsiMeetActivity.class);
         intent.setAction(ACTION_JITSI_MEET_CONFERENCE);
@@ -147,17 +150,35 @@ public class JitsiMeetActivity extends FragmentActivity
         }
     }
 
+    /*public  void ShowAlert(String title, String msg) {
+        AlertDialog alertDialog = new AlertDialog.Builder(JitsiMeetActivity.this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+            new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        alertDialog.show();
+    }*/
+
+
     private @Nullable
     JitsiMeetConferenceOptions getConferenceOptions(Intent intent) {
         String action = intent.getAction();
 
         if (Intent.ACTION_VIEW.equals(action)) {
             Uri uri = intent.getData();
+
             if (uri != null) {
+                TokenJwt = uri.getQueryParameter("jwt");
+
                 return new JitsiMeetConferenceOptions.Builder().setRoom(uri.toString()).build();
             }
         } else if (ACTION_JITSI_MEET_CONFERENCE.equals(action)) {
             return intent.getParcelableExtra(JITSI_MEET_CONFERENCE_OPTIONS);
+
         }
 
         return null;

@@ -210,7 +210,7 @@ var config = {
     // fileRecordingsServiceSharingEnabled: false,
 
     // Whether to enable live streaming or not.
-    // liveStreamingEnabled: false,
+     liveStreamingEnabled: false,
 
     // Transcription (in interface_config,
     // subtitles and buttons can be configured)
@@ -602,7 +602,7 @@ var config = {
     // Mainly privacy related settings
 
     // Disables all invite functions from the app (share, invite, dial out...etc)
-    // disableInviteFunctions: true,
+     disableInviteFunctions: true,
 
     // Disables storing the room name to the recents list
     // doNotStoreRoom: true,

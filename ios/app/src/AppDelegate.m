@@ -20,6 +20,8 @@
 #import "Types.h"
 #import "ViewController.h"
 
+#import "CommonClass.h"
+
 @import Firebase;
 @import JitsiMeetSDK;
 
@@ -30,13 +32,21 @@
     JitsiMeet *jitsiMeet = [JitsiMeet sharedInstance];
 
     jitsiMeet.conferenceActivityType = JitsiMeetConferenceActivityType;
-    jitsiMeet.customUrlScheme = @"org.jitsi.meet";
-    jitsiMeet.universalLinkDomains = @[@"meet.jit.si", @"alpha.jitsi.net", @"beta.meet.jit.si"];
+    jitsiMeet.customUrlScheme = @"com.softic.wmeet";
+      jitsiMeet.universalLinkDomains = @[@"meet.jit.si", @"alpha.jitsi.net", @"beta.meet.jit.si" , @"com.softic.wmeet" ];
 
     jitsiMeet.defaultConferenceOptions = [JitsiMeetConferenceOptions fromBuilder:^(JitsiMeetConferenceOptionsBuilder *builder) {
-        [builder setFeatureFlag:@"resolution" withValue:@(360)];
-        builder.serverURL = [NSURL URLWithString:@"https://meet.jit.si"];
-        builder.welcomePageEnabled = YES;
+      [builder setFeatureFlag:@"add-people.enabled" withBoolean:NO];
+       [builder setFeatureFlag:@"invite.enabled" withBoolean:NO];
+       [builder setFeatureFlag:@"live-streaming.enabled" withBoolean:NO];
+
+
+      [builder setFeatureFlag:@"close-captions.enabled" withBoolean:NO];
+      [builder setFeatureFlag:@"meeting-password.enabled" withBoolean:NO];
+
+        builder.serverURL = [NSURL URLWithString:@"https://wmeet.softic.us"];
+      builder.welcomePageEnabled = YES;
+      builder.audioMuted = YES;
 
         // Apple rejected our app because they claim requiring a
         // Dropbox account for recording is not acceptable.
@@ -113,6 +123,16 @@
     }
 
     NSURL *openUrl = url;
+  
+      NSLog(@"url recieved: %@", url);
+      NSLog(@"query string: %@", [url query]);
+      NSLog(@"host: %@", [url host]);
+      NSLog(@"url path: %@", [url path]);
+      NSDictionary *dict = [self parseQueryString:[url query]];
+
+      [CommonClass sharedObject].UniqueToken= [dict objectForKey:@"jwt"];
+  
+  
 
     if ([FIRUtilities appContainsRealServiceInfoPlist]) {
         // Process Firebase Dynamic Links
@@ -126,6 +146,36 @@
     return [[JitsiMeet sharedInstance] application:app
                                            openURL:openUrl
                                            options:options];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- (NSDictionary *)parseQueryString:(NSString *)query {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:6] ;
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    
+    for (NSString *pair in pairs) {
+        NSArray *elements = [pair componentsSeparatedByString:@"="];
+      NSString *key = [[elements objectAtIndex:0] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+      NSString *val = [[elements objectAtIndex:1] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        
+        [dict setObject:val forKey:key];
+    }
+    return dict;
 }
 
 @end

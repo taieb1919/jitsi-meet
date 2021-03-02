@@ -24,6 +24,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		55BEDABDA92D47D399A70A5E /* libPods-JitsiMeet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D878B07B3FBD6E305EAA6B27 /* libPods-JitsiMeet.a */; };
+		9AACF2AE25E7D28C00AD27E2 /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AACF2AD25E7D28C00AD27E2 /* CommonClass.m */; };
 		DE050389256E904600DEE3A5 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE050388256E904600DEE3A5 /* WebRTC.xcframework */; };
 		DE05038A256E904600DEE3A5 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DE050388256E904600DEE3A5 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DE4C456121DE1E4E00EA0709 /* FIRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4C455F21DE1E4E00EA0709 /* FIRUtilities.m */; };
@@ -107,7 +108,7 @@
 		0BEA5C3A1F7B8F73000D0AB4 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		0BEA5C3C1F7B8F73000D0AB4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BEA5C3E1F7B8F73000D0AB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* jitsi-meet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "jitsi-meet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* WMeet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WMeet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -116,6 +117,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4670A512A688E2DC34528282 /* Pods-jitsi-meet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-jitsi-meet.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-jitsi-meet/Pods-jitsi-meet.debug.xcconfig"; sourceTree = "<group>"; };
 		609CB2080B75F75A89923F3D /* Pods-JitsiMeet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JitsiMeet.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-JitsiMeet/Pods-JitsiMeet.debug.xcconfig"; sourceTree = "<group>"; };
+		9AACF2AC25E7D27500AD27E2 /* CommonClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonClass.h; sourceTree = "<group>"; };
+		9AACF2AD25E7D28C00AD27E2 /* CommonClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommonClass.m; sourceTree = "<group>"; };
 		B3B083EB1D4955FF0069CEE7 /* app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = app.entitlements; sourceTree = "<group>"; };
 		D878B07B3FBD6E305EAA6B27 /* libPods-JitsiMeet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JitsiMeet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE050388256E904600DEE3A5 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = WebRTC.xcframework; path = "../../node_modules/react-native-webrtc/apple/WebRTC.xcframework"; sourceTree = "<group>"; };
@@ -212,6 +215,8 @@
 				0BBD021F212EB69D00CCB19F /* Types.h */,
 				0B412F1D1EDEE6E800B1A0A6 /* ViewController.h */,
 				0B412F1E1EDEE6E800B1A0A6 /* ViewController.m */,
+				9AACF2AC25E7D27500AD27E2 /* CommonClass.h */,
+				9AACF2AD25E7D28C00AD27E2 /* CommonClass.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -245,7 +250,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* jitsi-meet.app */,
+				13B07F961A680F5B00A75B9A /* WMeet.app */,
 				0BEA5C251F7B8F73000D0AB4 /* JitsiMeetCompanion.app */,
 				0BEA5C311F7B8F73000D0AB4 /* JitsiMeetCompanion Extension.appex */,
 			);
@@ -313,7 +318,7 @@
 			);
 			name = JitsiMeet;
 			productName = "Jitsi Meet";
-			productReference = 13B07F961A680F5B00A75B9A /* jitsi-meet.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* WMeet.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -327,17 +332,13 @@
 				TargetAttributes = {
 					0BEA5C241F7B8F73000D0AB4 = {
 						CreatedOnToolsVersion = 9.0;
-						DevelopmentTeam = FC967L3QRG;
 						ProvisioningStyle = Automatic;
 					};
 					0BEA5C301F7B8F73000D0AB4 = {
 						CreatedOnToolsVersion = 9.0;
-						DevelopmentTeam = FC967L3QRG;
 						ProvisioningStyle = Automatic;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = FC967L3QRG;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.SafariKeychain = {
 								enabled = 1;
@@ -525,6 +526,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AACF2AE25E7D28C00AD27E2 /* CommonClass.m in Sources */,
 				0B412F1F1EDEE6E800B1A0A6 /* ViewController.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				DE4C456121DE1E4E00EA0709 /* FIRUtilities.m in Sources */,
@@ -585,11 +587,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = FC967L3QRG;
+				DEVELOPMENT_TEAM = 6MJ5A2K5Z9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = JitsiMeetCompanion_Extension;
 				INFOPLIST_FILE = watchos/app/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jitsi.meet.watchkit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softic.wmeet.watchkit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -620,11 +622,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FC967L3QRG;
+				DEVELOPMENT_TEAM = 6MJ5A2K5Z9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = JitsiMeetCompanion_Extension;
 				INFOPLIST_FILE = watchos/app/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jitsi.meet.watchkit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softic.wmeet.watchkit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -653,7 +655,9 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = FC967L3QRG;
+				DEVELOPMENT_TEAM = 6MJ5A2K5Z9;
+				EENABLE_BITCODE = YES;
+				ENABLE_BITCODE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = watchos/extension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -661,7 +665,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.jitsi.meet.watchkit.extension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softic.wmeet.watchkit.extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -691,7 +695,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FC967L3QRG;
+				DEVELOPMENT_TEAM = 6MJ5A2K5Z9;
+				EENABLE_BITCODE = YES;
+				ENABLE_BITCODE = YES;
+				"ENABLE_BITCODE[arch=*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = watchos/extension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -699,7 +706,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.jitsi.meet.watchkit.extension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.softic.wmeet.watchkit.extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -722,7 +729,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = FC967L3QRG;
+				DEVELOPMENT_TEAM = 6MJ5A2K5Z9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = src/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -735,8 +742,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.jitsi.meet;
-				PRODUCT_NAME = "jitsi-meet";
+				PRODUCT_BUNDLE_IDENTIFIER = com.softic.wmeet;
+				PRODUCT_NAME = WMeet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
@@ -748,24 +755,25 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconRelease;
 				CODE_SIGN_ENTITLEMENTS = app.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = FC967L3QRG;
-				ENABLE_BITCODE = YES;
+				DEVELOPMENT_TEAM = 6MJ5A2K5Z9;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = src/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MARKETING_VERSION = 21.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.jitsi.meet;
-				PRODUCT_NAME = "jitsi-meet";
+				PRODUCT_BUNDLE_IDENTIFIER = com.softic.wmeet;
+				PRODUCT_NAME = wmeet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
@@ -800,7 +808,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -822,7 +830,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -860,9 +868,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -875,8 +884,9 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";

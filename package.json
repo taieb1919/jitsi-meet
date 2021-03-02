@@ -149,7 +149,11 @@
   "scripts": {
     "lint": "eslint . && flow",
     "postinstall": "jetify",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "clean:android": "cd android && ./gradlew clean && rm -rf build && rm -rf app/build && rm -rf android/.gradle && cd ../",
+    "clean:ios": "cd ios && xcodebuild clean && rm -rf Pods && cd ../",
+    "clean:npm": " watchman watch-del-all && npm cache clean && rm -rf node_modules/",
+    "cleanreact:all": "cd android && ./gradlew clean && cd .. && cd ios && xcodebuild clean && rm -rf Pods && cd .. /"
   },
   "browser": {
     "jQuery-Impromptu": "jQuery-Impromptu/src/jquery-impromptu.js"

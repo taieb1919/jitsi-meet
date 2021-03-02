@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-package org.jitsi.meet;
+package com.softic.wmeet;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import org.json.JSONArray;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,7 +37,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
-
+import android.content.DialogInterface;
 import androidx.annotation.Nullable;
 
 import org.jitsi.meet.sdk.JitsiMeet;
@@ -83,7 +93,28 @@ public class MainActivity extends JitsiMeetActivity {
     protected void onCreate(Bundle savedInstanceState) {
         JitsiMeet.showSplashScreen(this);
         super.onCreate(savedInstanceState);
+
+
+        AndroidNetworking.initialize(getApplicationContext());
     }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+
+
+        super.onNewIntent(intent);
+
+    }
+
+
+
+
+
+
+
+
+
+
 
     @Override
     protected boolean extraInitialize() {
@@ -92,7 +123,7 @@ public class MainActivity extends JitsiMeetActivity {
         // Setup Crashlytics and Firebase Dynamic Links
         // Here we are using reflection since it may have been disabled at compile time.
         try {
-            Class<?> cls = Class.forName("org.jitsi.meet.GoogleServicesHelper");
+            Class<?> cls = Class.forName("com.softic.wmeet.GoogleServicesHelper");
             Method m = cls.getMethod("initialize", JitsiMeetActivity.class);
             m.invoke(null, this);
         } catch (Exception e) {
@@ -142,7 +173,7 @@ public class MainActivity extends JitsiMeetActivity {
             unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
         }
-
+        UpdateInformationInServer(false);
         super.onDestroy();
     }
 
@@ -151,10 +182,20 @@ public class MainActivity extends JitsiMeetActivity {
         JitsiMeetConferenceOptions defaultOptions
             = new JitsiMeetConferenceOptions.Builder()
             .setWelcomePageEnabled(true)
+            .setAudioMuted(true)
             .setServerURL(buildURL(defaultURL))
             .setFeatureFlag("call-integration.enabled", false)
             .setFeatureFlag("resolution", 360)
             .setFeatureFlag("server-url-change.enabled", !configurationByRestrictions)
+            .setFeatureFlag("meeting-password.enabled", false)
+            .setFeatureFlag("close-captions.enabled", false)
+
+
+            .setFeatureFlag("add-people.enabled", false)
+            .setFeatureFlag("invite.enabled", false)
+            .setFeatureFlag("live-streaming.enabled", false)
+            .setFeatureFlag("recording.enabled", false)
+            .setFeatureFlag("video-share.enabled", false)
             .build();
         JitsiMeet.setDefaultConferenceOptions(defaultOptions);
     }
@@ -173,7 +214,7 @@ public class MainActivity extends JitsiMeetActivity {
                     restrictions.containsKey(RESTRICTION_SERVER_URL)) {
                     defaultURL = restrictions.getString(RESTRICTION_SERVER_URL);
                     configurationByRestrictions = true;
-                // Otherwise use default URL from app-restrictions.xml.
+                    // Otherwise use default URL from app-restrictions.xml.
                 } else {
                     defaultURL = restrictionEntry.getSelectedString();
                     configurationByRestrictions = false;
@@ -185,6 +226,7 @@ public class MainActivity extends JitsiMeetActivity {
     @Override
     protected void onConferenceTerminated(HashMap<String, Object> extraData) {
         Log.d(TAG, "Conference terminated: " + extraData);
+        UpdateInformationInServer(false);
     }
 
     // Activity lifecycle method overrides
@@ -226,6 +268,53 @@ public class MainActivity extends JitsiMeetActivity {
                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
         }
     }
+
+    @Override
+    protected void onConferenceJoined(HashMap<String, Object> extraData) {
+        //ShowAlert("onConferenceJoined extraData",extraData.toString());
+
+
+        super.onConferenceJoined(extraData);
+
+        UpdateInformationInServer(true);
+    }
+
+
+
+
+    private void UpdateInformationInServer(boolean IsJoined) {
+
+        if (TokenJwt==null)
+            return;
+
+
+       // ShowAlert("Token To Send",TokenJwt);
+        ANRequest.GetRequestBuilder aa = AndroidNetworking.get("https://cnn.eppm.com.tn/SofticwMeet/API/WmeetApi/LogParticipantWithToken");
+
+        aa.addHeaders("IsWmeetMobile", "true");
+
+
+        aa.addQueryParameter("token", TokenJwt);
+        aa.addQueryParameter("left", (String.valueOf(!IsJoined)));
+        ANRequest rq= aa.build();
+       //    ShowAlert("ANRequest",rq.getUrl());
+        //aa.build()
+        rq  .getAsJSONArray(new JSONArrayRequestListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                //ShowAlert("res","Ok  net "+response.toString());
+            }
+
+            @Override
+            public void onError(ANError error) {
+                // ShowAlert("error  net","error  net "+error.getResponse());
+            }
+        });
+
+    }
+
+
+
 
     // Helper methods
     //

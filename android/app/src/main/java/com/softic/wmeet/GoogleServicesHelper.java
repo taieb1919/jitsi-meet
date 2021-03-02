@@ -1,4 +1,4 @@
-package org.jitsi.meet;
+package com.softic.wmeet;
 
 import android.net.Uri;
 import android.util.Log;
@@ -27,10 +27,13 @@ final class GoogleServicesHelper {
                     Uri dynamicLink = null;
 
                     if (pendingDynamicLinkData != null) {
+                    //    MainActivity.ShowAlert("GoogleServicesHelper",pendingDynamicLinkData.toString());
                         dynamicLink = pendingDynamicLinkData.getLink();
+
                     }
 
                     if (dynamicLink != null) {
+                     //    MainActivity.ShowAlert("GoogleServicesHelper",dynamicLink.toString());
                         activity.join(dynamicLink.toString());
                     }
                 });

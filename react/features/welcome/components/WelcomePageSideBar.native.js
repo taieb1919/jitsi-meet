@@ -101,18 +101,7 @@ class WelcomePageSideBar extends Component<Props> {
                             icon = { IconSettings }
                             label = 'settings.title'
                             onPress = { this._onOpenSettings } />
-                        <SideBarItem
-                            icon = { IconInfo }
-                            label = 'welcomepage.terms'
-                            url = { TERMS_URL } />
-                        <SideBarItem
-                            icon = { IconInfo }
-                            label = 'welcomepage.privacy'
-                            url = { PRIVACY_URL } />
-                        <SideBarItem
-                            icon = { IconHelp }
-                            label = 'welcomepage.getHelp'
-                            onPress = { this._onOpenHelpPage } />
+                       
                     </ScrollView>
                 </SafeAreaView>
             </SlidingView>

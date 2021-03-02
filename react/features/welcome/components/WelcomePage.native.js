@@ -293,36 +293,8 @@ class WelcomePage extends AbstractWelcomePage {
                         </TouchableOpacity>
                         <VideoSwitch />
                     </Header>
-                    <SafeAreaView style = { styles.roomContainer } >
-                        <View style = { styles.joinControls } >
-                            <Text style = { styles.enterRoomText }>
-                                { t('welcomepage.roomname') }
-                            </Text>
-                            <TextInput
-                                accessibilityLabel = { t(roomnameAccLabel) }
-                                autoCapitalize = 'none'
-                                autoComplete = 'off'
-                                autoCorrect = { false }
-                                autoFocus = { false }
-                                onBlur = { this._onFieldBlur }
-                                onChangeText = { this._onRoomChange }
-                                onFocus = { this._onFieldFocus }
-                                onSubmitEditing = { this._onJoin }
-                                placeholder = { this.state.roomPlaceholder }
-                                placeholderTextColor = { PLACEHOLDER_TEXT_COLOR }
-                                returnKeyType = { 'go' }
-                                style = { styles.textInput }
-                                underlineColorAndroid = 'transparent'
-                                value = { this.state.room } />
-                            {
-                                this._renderInsecureRoomNameWarning()
-                            }
-                            {
-                                this._renderHintBox()
-                            }
-                        </View>
-                    </SafeAreaView>
-                    <WelcomePageLists disabled = { this.state._fieldFocused } />
+                   
+                
                 </View>
                 <WelcomePageSideBar />
                 { this._renderWelcomePageModals() }
